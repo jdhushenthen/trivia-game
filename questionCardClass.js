@@ -1,7 +1,7 @@
 // Card Class 
 
-var canvas = document.getElementById("gameScreen");
-var ctx = canvas.getContext('2d');
+//var canvas = document.getElementById("gameScreen");
+//var ctx = canvas.getContext('2d');
 
 class Card{
     constructor(colour_of_card, xPos_card){
@@ -19,6 +19,6 @@ class Card{
 }
 
 //test code
-greenCard = new Card('blue', 150);
-greenCard.displayCard();
+//greenCard = new Card('blue', 150);
+//greenCard.displayCard();
 

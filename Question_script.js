@@ -1,33 +1,38 @@
 var canvas = document.getElementById("gameScreen");
 var ctx = canvas.getContext('2d');
 
+
+//intro text to screen
 ctx.font = "16px Arial";
 ctx.strokeStyle = "black";
 ctx.fillText("Welcum Boyz", 300, 75);
 
+//calls timeout then executes 
 setTimeout(yo, 2000);
 
-function drawCards(){
-    let cardY = 300;
-    let cardWidth = 170;
-    let cardHeight = 230;
+//instantiates cards, questions, and question counter
+greenCard = new Card('green',10);
+redCard = new Card('red',190);
+blueCard = new Card('blue',370);
+yellowCard = new Card('yellow',550);
 
-    ctx.clearRect(0, 0, 800, 600);
-    
-    ctx.strokeStyle = 'red';
-    ctx.strokeRect(10, cardY, cardWidth, cardHeight);
-    ctx.strokeStyle = 'blue';
-    ctx.strokeRect(190, cardY, cardWidth, cardHeight);
-    ctx.strokeStyle = 'green';
-    ctx.strokeRect(370, cardY, cardWidth, cardHeight);
-    ctx.strokeStyle = 'yellow';
-    ctx.strokeRect(550, cardY, cardWidth, cardHeight);
+questionForGame = new questionScript(["Question1", "answer", "anser","anseer","antser"],["Kwestion2","this","thiss","thisss","thees"],["question3!","pick me","me!","not me","911 was an inside job"]);
+
+//displays card to screens
+function drawCards(){
+   ctx.clearRect(0,0,800,600);
+   greenCard.displayCard();
+   redCard.displayCard();
+   blueCard.displayCard();
+   yellowCard.displayCard();
 }
 
 function nextQuestionText(){
     ctx.clearRect(0, 0, 800, 600);
     ctx.fillText("Click for the next question", 300, 75)
+    addEventListener('click', gameLoop)
 }
+
 
 function yo(){
     ctx.clearRect(0, 0, 800, 600);
@@ -39,22 +44,17 @@ function yo(){
 function rightAnswer(){
     ctx.clearRect(0, 0, 800, 600);
     ctx.fillText("You got it bud!", 300, 75);
+    console.log(questionForGame.questionNumber);
     setTimeout(nextQuestionText,2000);
-    addEventListener('click', () =>{
-        nextQuestion("Who's the best poker player?", "wames jong", "hyunwoo", "anderson", "noodle", 4);
-    });  
 }
 
-function nextQuestion(question, text1, text2, text3, text4, rightCard){
+function nextQuestion(){
     ctx.clearRect(0, 0, 800, 600);
     
     drawCards();
 
-    ctx.fillText(question, 300, 75);
-    ctx.fillText(text1, 60, 350);
-    ctx.fillText(text2, 240, 350);
-    ctx.fillText(text3, 420, 350);
-    ctx.fillText(text4, 590, 350);
+    questionForGame.displayQuestions(questionForGame.questionNumber);
+    rightCard = questionForGame.getRightAnswer(questionForGame.questionNumber);
 
     var rightCardX_min = 0;
     var rightCardX_max = 0;
@@ -88,12 +88,8 @@ function nextQuestion(question, text1, text2, text3, text4, rightCard){
 };
 
 function gameLoop(){
-    nextQuestion("who is the thiccest??","Janny","Marvin","Brando","Big D-shaan", 1);
-    //setTimeout(ctx.clearRect(0, 0, 800, 600),2000);
-    //setTimeout(ctx.fillText("Click for the next question", 300, 75),2001);
-    //addEventListener('click', () =>{
-        //nextQuestion("Who's the best poker player?", "wames jong", "hyunwoo", "anderson", "noodle", 4);
-   // });  
+    questionForGame.questionNumber = questionForGame.questionNumber + 1;
+    nextQuestion(questionForGame.questionNumber);
 };
 
 
