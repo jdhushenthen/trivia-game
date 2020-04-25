@@ -14,13 +14,16 @@ class questionScript{
     }
     getRightAnswer(qNumber){
         if(qNumber == 1){
-            return 3;
+            let minMax = [10,180];
+            return minMax;
         }
         else if(qNumber == 2){
-            return 1;
+            let minMax = [190,360];
+            return minMax;
         }
         if(qNumber == 3){
-            return 2;
+            let minMax = [370,540];
+            return minMax;
         }
     }
 

@@ -28,6 +28,7 @@ function drawCards(){
 }
 
 function nextQuestionText(){
+    removeEventListener('click', gameLoop);
     ctx.clearRect(0, 0, 800, 600);
     ctx.fillText("Click for the next question", 300, 75)
     addEventListener('click', gameLoop)
@@ -35,6 +36,7 @@ function nextQuestionText(){
 
 
 function yo(){
+    //removeEventListener('click', gameLoop);
     ctx.clearRect(0, 0, 800, 600);
     ctx.fillText("Click if you're ready to play", 300, 75);
     addEventListener('click', gameLoop);    
@@ -55,31 +57,13 @@ function nextQuestion(){
 
     questionForGame.displayQuestions(questionForGame.questionNumber);
     rightCard = questionForGame.getRightAnswer(questionForGame.questionNumber);
-
-    var rightCardX_min = 0;
-    var rightCardX_max = 0;
+    
     var rightCardY_min = 300;
     var rightCardY_max = 530;
 
-    if(rightCard == 1){
-        rightCardX_min = 10;
-        rightCardX_max = 180;
-    }
-    else if(rightCard == 2){
-        rightCardX_min = 190;
-        rightCardX_max = 360;
-    }
-    else if(rightCard == 3){
-        rightCardX_min = 370;
-        rightCardX_max = 540;
-    }
-    else if(rightCard == 4){
-        rightCardX_min = 550;
-        rightCardX_max = 720;
-    }
     
     window.addEventListener('click', (e) =>{
-        if((e.x > rightCardX_min) && (e.x < rightCardX_max)){
+        if((e.x > rightCard[0]) && (e.x < rightCard[1])){
             if((e.y > rightCardY_min) && (e.y < rightCardY_max)){
             rightAnswer();
             }
@@ -88,6 +72,7 @@ function nextQuestion(){
 };
 
 function gameLoop(){
+    removeEventListener('click', gameLoop);
     questionForGame.questionNumber = questionForGame.questionNumber + 1;
     nextQuestion(questionForGame.questionNumber);
 };
