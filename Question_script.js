@@ -1,6 +1,8 @@
 var canvas = document.getElementById("gameScreen");
 var ctx = canvas.getContext('2d');
 
+var image = new Image();
+image.src = "https://gdb.rferl.org/466DA44A-332F-49CB-994F-247CF47FB7A3_w1597_n_r1_st.jpg"
 
 //intro text to screen
 ctx.font = "16px Arial";
@@ -16,7 +18,7 @@ redCard = new Card('red',190);
 blueCard = new Card('blue',370);
 yellowCard = new Card('yellow',550);
 
-questionForGame = new questionScript(["Question1", "answer", "anser","anseer","antser"],["Kwestion2","this","thiss","thisss","thees"],["question3!","pick me","me!","not me","911 was an inside job"]);
+questionForGame = new questionScript(["Question1", "answer", "anser","anseer","antser"],["Kwestion2","this","thiss","thisss","thees"],["question3!","pick me","me!","911 was an inside job","not me"]);
 
 //displays card to screens
 function drawCards(){
@@ -46,6 +48,9 @@ function yo(){
 function rightAnswer(){
     ctx.clearRect(0, 0, 800, 600);
     ctx.fillText("You got it bud!", 300, 75);
+    if(questionForGame.questionNumber == 3){
+        ctx.drawImage(image,0,0);
+    }
     console.log(questionForGame.questionNumber);
     setTimeout(nextQuestionText,2000);
 }
