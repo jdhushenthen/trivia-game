@@ -57,8 +57,18 @@ function yo(){
 
 
 function rightAnswer(){
+    window.removeEventListener('click',check_rightwrong);
     ctx.clearRect(0, 0, 800, 600);
     ctx.fillText("You got it bud!", 300, 75);
+    console.log('r');
+    setTimeout(nextQuestionText,2000);
+}
+
+function wrongAnswer(){
+    window.removeEventListener('click',check_rightwrong);
+    ctx.clearRect(0, 0, 800, 600);
+    ctx.fillText("Wrong, step up ur game kid", 300, 75);
+    console.log('w');
     setTimeout(nextQuestionText,2000);
 }
 
@@ -68,20 +78,24 @@ function nextQuestion(){
     drawCards();
 
     questionForGame.displayQuestions(questionForGame.questionNumber);
+    
+    window.addEventListener('click',check_rightwrong);
+};
+
+function check_rightwrong(e){
     rightCard = questionForGame.getRightAnswer(questionForGame.questionNumber);
     
-    var rightCardY_min = 300;
-    var rightCardY_max = 530;
-
-    
-    window.addEventListener('click', (e) =>{
-        if((e.x > rightCard[0]) && (e.x < rightCard[1])){
-            if((e.y > rightCardY_min) && (e.y < rightCardY_max)){
-            rightAnswer();
-            }
+    let rightCardY_min = 300;
+    let rightCardY_max = 530;
+    if((e.x > rightCard[0]) && (e.x < rightCard[1])){
+        if((e.y > rightCardY_min) && (e.y < rightCardY_max)){
+        rightAnswer();
         }
-    });
-};
+    }
+    else{
+        wrongAnswer();
+    }
+}
 
 function gameLoop(){
     removeEventListener('click', gameLoop);
