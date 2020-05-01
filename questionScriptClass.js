@@ -4,56 +4,43 @@
 //var ctx = canvas.getContext('2d');
 
 class questionScript{
-    constructor(qData1, qData2, qData3){
-        this.q1 = qData1;
-        this.q2 = qData2;
-        this.q3 = qData3;
-        //this.q4 = qData4;
-        //this.q5 = qData5;
+    constructor(Questions, A, B, C, D, Answer){
+        this.questions = Questions;
+        this.A = A;
+        this.B = B;
+        this.C = C;
+        this.D = D;
+        this.answers = Answer;
         this.questionNumber = 0;
     }
     getRightAnswer(qNumber){
-        if(qNumber == 1){
+        let qAnswer = (this.answers)[qNumber];
+        if(qAnswer == "A"){
             let minMax = [10,180];
             return minMax;
         }
-        else if(qNumber == 2){
+        else if(qAnswer == "B"){
             let minMax = [190,360];
             return minMax;
         }
-        if(qNumber == 3){
+        else if(qAnswer == "C"){
             let minMax = [370,540];
+            return minMax;
+        }
+        else if(qAnswer == "D"){
+            let minMax = [550,720];
             return minMax;
         }
     }
 
     displayQuestions(qNumber){
-        if(qNumber == 1){
-            ctx.fillText(this.q1[0], 300, 75);
-            ctx.fillText(this.q1[1], 20, 320);
-            ctx.fillText(this.q1[2], 200, 320);
-            ctx.fillText(this.q1[3], 380, 320);
-            ctx.fillText(this.q1[4], 560, 320);
-        }
-        else if(qNumber == 2){
-            ctx.fillText(this.q2[0], 300, 75);
-            ctx.fillText(this.q2[1], 20, 320);
-            ctx.fillText(this.q2[2], 200, 320);
-            ctx.fillText(this.q2[3], 380, 320);
-            ctx.fillText(this.q2[4], 560, 320);
-        }
-        else if(qNumber == 3){
-            ctx.fillText(this.q3[0], 300, 75);
-            ctx.fillText(this.q3[1], 20, 320);
-            ctx.fillText(this.q3[2], 200, 320);
-            ctx.fillText(this.q3[3], 380, 320);
-            ctx.fillText(this.q3[4], 560, 320);
-        }
+        ctx.fillText(this.questions[qNumber], 300, 75);
+        ctx.fillText(this.A[qNumber], 20, 320);
+        ctx.fillText(this.B[qNumber], 200, 320);
+        ctx.fillText(this.C[qNumber], 380, 320);
+        ctx.fillText(this.D[qNumber], 560, 320);
     }
     newQuestion(){
         this.questionNumber = this.questionNumber + 1;
     }
 }
-//test code
-//testQuestion =  new questionScript(["q1","q2","q3","q4"], ["q5","q6","q7","q8"], ["q9","q10","q11","q12"]);
-//testQuestion.displayQuestions(3);
