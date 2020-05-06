@@ -76,7 +76,7 @@ function nextQuestion(){
     ctx.clearRect(0, 0, 800, 600);
     
     drawCards();
-
+    
     questionForGame.displayQuestions(questionForGame.questionNumber);
     
     window.addEventListener('click',check_rightwrong);

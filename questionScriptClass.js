@@ -34,11 +34,12 @@ class questionScript{
     }
 
     displayQuestions(qNumber){
-        ctx.fillText(this.questions[qNumber], 300, 75);
-        ctx.fillText(this.A[qNumber], 20, 320);
-        ctx.fillText(this.B[qNumber], 200, 320);
-        ctx.fillText(this.C[qNumber], 380, 320);
-        ctx.fillText(this.D[qNumber], 560, 320);
+        ctx.fillStyle = "black";
+        ctx.fillText(this.questions[qNumber], 100, 75);
+        ctx.fillText(this.A[qNumber], 70, 320);
+        ctx.fillText(this.B[qNumber], 250, 320);
+        ctx.fillText(this.C[qNumber], 430, 320);
+        ctx.fillText(this.D[qNumber], 610, 320);
     }
     newQuestion(){
         this.questionNumber = this.questionNumber + 1;
