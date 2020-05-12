@@ -1,30 +1,32 @@
-var canvas = document.getElementById("gameScreen");
-var ctx = canvas.getContext('2d');
 
 
-var width = 200;
-var height = 210;
 
-var cards = new Image();
-cards.src = "spritesheet_poker_assets.png"
-
-sprite = new Card_animate();
-
-let lastTime = 0;
-function gameLoop(timestamp){
-    let deltaTime = timestamp - lastTime;
-    lastTime = timestamp;
-
-    ctx.clearRect(0,0,1000,600);
-
-    sprite.update(deltaTime);
-    sprite.draw(ctx);
-
-    console.log('loop');
-    requestAnimationFrame(gameLoop);
-
+function updateFrame(){
+    currentFrame = ++currentFrame % 2;
 }
 
-addEventListener("load", ()=>{
-    requestAnimationFrame(gameLoop);
-});
+function drawCharacter(draw_x,yPos){
+    updateFrame();
+    if(currentFrame == 1){
+        ctx.drawImage(gameChar,80,32,26,40,draw_x,this.yPos,100,100);
+    }
+    else if(currentFrame == 0){
+        ctx.drawImage(gameChar,45,32,26,40,draw_x,this.yPos,100,100);
+    }
+}
+
+ctx.fillText(words, (this.xPos+0.5*this.width), (this.yPos-10));
+function stopFunc(){
+    clearInterval(x);
+}
+
+var x = setInterval(() => {
+    drawCharacter();
+}, 100);
+
+setTimeout(stopFunc,3000);
+
+
+
+  
+

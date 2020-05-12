@@ -1,6 +1,26 @@
 var canvas = document.getElementById("gameScreen");
 var ctx = canvas.getContext('2d');
 
+ctx.textAlign = "center";
+
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+var offset = 0.05*canvas.width;
+var margin = 0.10*canvas.width;
+var card_width = 0.15*canvas.width;
+
+let pos1 = offset;
+let pos2 = offset + card_width + margin;
+let pos3 = offset +2*card_width + 2*margin;
+let pos4 = offset +3*card_width + 3*margin;
+
+background = new Image();
+background.src = "game-background-2-x.jpg"
+
+game_speaker = new announcer();
+game_speaker.relocate_announcer(canvas.width/2,100)
+
 var image = new Image();
 image.src = "https://gdb.rferl.org/466DA44A-332F-49CB-994F-247CF47FB7A3_w1597_n_r1_st.jpg"
 
@@ -13,10 +33,13 @@ D_array = getD();
 Ans_array = getAnswer();
 
 questionForGame = new questionScript(Q_array, A_array, B_array, C_array, D_array, Ans_array);
+questionForGame.set_xStart(pos1,pos2,pos3,pos4);
+questionForGame.cardWidth = card_width;
 
 //intro text to screen
-ctx.font = "16px Arial";
+ctx.font = "48px Arial";
 ctx.strokeStyle = "black";
+ctx.drawImage(background,0,0,canvas.width,canvas.height);
 ctx.fillText("Welcum Boyz", 300, 75);
 moderator.display_announcer();
 
@@ -24,16 +47,15 @@ moderator.display_announcer();
 setTimeout(yo, 2000);
 
 //instantiates cards, questions, and question counter
-greenCard = new Card('green',10);
-redCard = new Card('red',190);
-blueCard = new Card('blue',370);
-yellowCard = new Card('yellow',550);
+greenCard = new Card('green',pos1);
+redCard = new Card('red',pos2);
+blueCard = new Card('blue',pos3);
+yellowCard = new Card('yellow',pos4);
 
 
 
 //displays card to screens
 function drawCards(){
-   ctx.clearRect(0,0,800,600);
    greenCard.displayCard();
    redCard.displayCard();
    blueCard.displayCard();
@@ -42,7 +64,8 @@ function drawCards(){
 
 function nextQuestionText(){
     removeEventListener('click', gameLoop);
-    ctx.clearRect(0, 0, 800, 600);
+    ctx.drawImage(background,0,0,canvas.width,canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillText("Click for the next question", 300, 75)
     addEventListener('click', gameLoop)
 }
@@ -50,30 +73,37 @@ function nextQuestionText(){
 
 function yo(){
     //removeEventListener('click', gameLoop);
-    ctx.clearRect(0, 0, 800, 600);
-    ctx.fillText("Click if you're ready to play", 300, 75);
+    ctx.drawImage(background,0,0,canvas.width,canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    game_speaker.speak("Click if you're ready to play")
+    //ctx.fillText("Click if you're ready to play", 300, 75);
     addEventListener('click', gameLoop);    
 };
 
 
 function rightAnswer(){
     window.removeEventListener('click',check_rightwrong);
-    ctx.clearRect(0, 0, 800, 600);
-    ctx.fillText("You got it bud!", 300, 75);
+    ctx.drawImage(background,0,0,canvas.width,canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    game_speaker.speak("You got it bud");
+    //ctx.fillText("You got it bud!", 300, 75);
     console.log('r');
     setTimeout(nextQuestionText,2000);
 }
 
 function wrongAnswer(){
     window.removeEventListener('click',check_rightwrong);
-    ctx.clearRect(0, 0, 800, 600);
-    ctx.fillText("Wrong, step up ur game kid", 300, 75);
+    ctx.drawImage(background,0,0,canvas.width,canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    game_speaker.speak("Wrong, step up ur game kid");
+    //ctx.fillText("Wrong, step up ur game kid", 300, 75);
     console.log('w');
     setTimeout(nextQuestionText,2000);
 }
 
 function nextQuestion(){
-    ctx.clearRect(0, 0, 800, 600);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(background,0,0,canvas.width,canvas.height);
     
     drawCards();
     
