@@ -1,14 +1,21 @@
 {
-  "name": "io_game",
+  "name": "trvia-game",
   "version": "1.0.0",
-  "description": "adds baffle library for text animations",
-  "main": "textAnimations.js",
+  "description": "io game",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server",
+    "dev": "nodemon server"
   },
-  "author": "Jordan",
+  "author": "Aidan Schneider, Janahan Dhushenthen, Jordan Schneider, Steven Brown",
   "license": "MIT",
   "dependencies": {
-    "baffle": "^0.3.6"
+    "express": "^4.17.1",
+    "express-handlebars": "^4.0.4",
+    "moment": "^2.24.0",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
   }
 }
