@@ -8,16 +8,15 @@ class Card{
         this.colour = colour_of_card;
         this.xPos = xPos_card;
         this.yPos = 300;
-        this.height = 230;
-        this.width = 170;
+        this.height = 0.40*canvas.height;
+        this.width = 0.15*canvas.width;
     }
 
     displayCard(){
-        ctx.strokeStyle = this.colour;
         ctx.strokeRect(this.xPos, this.yPos, this.width, this.height);
+        //ctx.drawImage(cards,1850,860,width,height,(this.xPos+50),this.yPos,width,height);  
     }
 }
-
 //test code
 //greenCard = new Card('blue', 150);
 //greenCard.displayCard();

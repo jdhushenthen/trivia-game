@@ -4,56 +4,60 @@
 //var ctx = canvas.getContext('2d');
 
 class questionScript{
-    constructor(qData1, qData2, qData3){
-        this.q1 = qData1;
-        this.q2 = qData2;
-        this.q3 = qData3;
-        //this.q4 = qData4;
-        //this.q5 = qData5;
+    constructor(Questions, A, B, C, D, Answer){
+        this.questions = Questions;
+        this.A = A;
+        this.B = B;
+        this.C = C;
+        this.D = D;
+        this.xStart1 = 0;
+        this.xStart2 = 0;
+        this.xStart3 = 0;
+        this.xStart4 = 0;
+        this.yStart = 320;
+        this.answers = Answer;
         this.questionNumber = 0;
+        this.cardWidth;
     }
+
+    set_xStart(x_start1, x_start2, x_start3, x_start4){
+        this.xStart1 = x_start1;
+        this.xStart2 = x_start2;
+        this.xStart3 = x_start3;
+        this.xStart4 = x_start4;
+    }
+
     getRightAnswer(qNumber){
-        if(qNumber == 1){
-            let minMax = [10,180];
+        let qAnswer = (this.answers)[qNumber];
+        if(qAnswer == "A"){
+            let minMax = [this.xStart1,(this.xStart1+this.cardWidth)];
             return minMax;
         }
-        else if(qNumber == 2){
-            let minMax = [190,360];
+        else if(qAnswer == "B"){
+            let minMax = [this.xStart2,(this.xStart2+this.cardWidth)];
             return minMax;
         }
-        if(qNumber == 3){
-            let minMax = [370,540];
+        else if(qAnswer == "C"){
+            let minMax = [this.xStart3,(this.xStart3+this.cardWidth)];
+            return minMax;
+        }
+        else if(qAnswer == "D"){
+            let minMax = [this.xStart4,(this.xStart4+this.cardWidth)];
             return minMax;
         }
     }
 
     displayQuestions(qNumber){
-        if(qNumber == 1){
-            ctx.fillText(this.q1[0], 300, 75);
-            ctx.fillText(this.q1[1], 20, 320);
-            ctx.fillText(this.q1[2], 200, 320);
-            ctx.fillText(this.q1[3], 380, 320);
-            ctx.fillText(this.q1[4], 560, 320);
-        }
-        else if(qNumber == 2){
-            ctx.fillText(this.q2[0], 300, 75);
-            ctx.fillText(this.q2[1], 20, 320);
-            ctx.fillText(this.q2[2], 200, 320);
-            ctx.fillText(this.q2[3], 380, 320);
-            ctx.fillText(this.q2[4], 560, 320);
-        }
-        else if(qNumber == 3){
-            ctx.fillText(this.q3[0], 300, 75);
-            ctx.fillText(this.q3[1], 20, 320);
-            ctx.fillText(this.q3[2], 200, 320);
-            ctx.fillText(this.q3[3], 380, 320);
-            ctx.fillText(this.q3[4], 560, 320);
-        }
+        ctx.fillStyle = "black";
+        ctx.fillText(this.questions[qNumber], canvas.width*0.1, canvas.height*0.1);
+        ctx.font = "16px Arial";
+        ctx.fillText(this.A[qNumber], (this.xStart1+20), this.yStart);
+        ctx.fillText(this.B[qNumber], (this.xStart2+20), this.yStart);
+        ctx.fillText(this.C[qNumber], (this.xStart3+20), this.yStart);
+        ctx.fillText(this.D[qNumber], (this.xStart4+20), this.yStart);
+        ctx.font = "48px Arial";
     }
     newQuestion(){
         this.questionNumber = this.questionNumber + 1;
     }
 }
-//test code
-//testQuestion =  new questionScript(["q1","q2","q3","q4"], ["q5","q6","q7","q8"], ["q9","q10","q11","q12"]);
-//testQuestion.displayQuestions(3);
