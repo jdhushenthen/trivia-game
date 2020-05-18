@@ -7,3 +7,12 @@
 #gameScreen {
     border: 2px solid black;
 }
+
+#gameScreenOne {
+    border: 2px solid black;
+}
+
+#characterPortrait {
+    position: relative; right: 500px; bottom: 100px;
+    border: 2px solid black;
+}
