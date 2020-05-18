@@ -1,7 +1,11 @@
 * {
-    margin: 5;
+    margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+#gameScreen {
+    border: 2px solid black;
 }
 
 #gameScreenOne {

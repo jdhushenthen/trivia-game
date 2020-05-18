@@ -1,0 +1,14 @@
+{
+  "name": "io_game",
+  "version": "1.0.0",
+  "description": "adds baffle library for text animations",
+  "main": "textAnimations.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jordan",
+  "license": "MIT",
+  "dependencies": {
+    "baffle": "^0.3.6"
+  }
+}
