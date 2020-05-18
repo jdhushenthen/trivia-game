@@ -1,9 +1,14 @@
 * {
-    margin: 0;
+    margin: 5;
     padding: 0;
     box-sizing: border-box;
 }
 
-#gameScreen {
+#gameScreenOne {
+    border: 2px solid black;
+}
+
+#characterPortrait {
+    position: relative; right: 500px; bottom: 100px;
     border: 2px solid black;
 }
