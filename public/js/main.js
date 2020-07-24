@@ -1,3 +1,4 @@
+// HTML elements
 const chatForm = document.getElementById('chat-form');
 const chatMessages = document.querySelector('.chat-messages');
 const roomName = document.getElementById('room-name');
@@ -5,6 +6,7 @@ const userList = document.getElementById('users');
 const usernameRequired = document.getElementById('usernameRequired');
 const roomRequired = document.getElementById('roomRequired')
 
+// API links
 const webaddress = "http://localhost:3000";
 const create_private_room_api = webaddress + "/api/create_private_room";
 const join_game_api = webaddress + "/api/join_game";
@@ -77,6 +79,7 @@ function validateForm(match_type, username, room) {
   return passed
 }
 
+// Join room if room found
 socket.on('roomFound', room => {
   let username = document.forms["sessionInfo"]["username"].value;
 
@@ -92,6 +95,7 @@ socket.on('roomFound', room => {
   socket.emit('joinRoom', {username, room});
 });
 
+// Require correct code if private and room not found
 socket.on('roomNotFound', match_type => {
   if (match_type == "private") {
     roomRequired.innerText = "Not a valid room code";

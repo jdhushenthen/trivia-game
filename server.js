@@ -10,6 +10,10 @@ const {
   userLeave,
   getRoomUsers
 } = require('./utils/users');
+const {
+  getQuestion
+} = require('./utils/questions');
+
 
 const app = express();
 const server = http.createServer(app);
@@ -36,9 +40,9 @@ io.on('connection', socket => {
 
   socket.on('createRoom', ({ match_type }) => {
     room = generateRoomCode(4)
-    if (match_type == "private"){
+    if (match_type == "private") {
       privateRooms.push(room)
-    } 
+    }
     else {
       publicRooms.push(room)
     }
@@ -46,13 +50,13 @@ io.on('connection', socket => {
   });
 
   socket.on('getRoom', ({ match_type, username, room }) => {
-    if (match_type == "private"){
+    if (match_type == "private") {
       if (privateRooms.includes(room)) {
         socket.emit("roomFound", room);
       } else {
         socket.emit("roomNotFound", match_type);
       }
-    } 
+    }
     else {
       var foundRoom = false;
       var i;
@@ -89,6 +93,8 @@ io.on('connection', socket => {
       room: user.room,
       users: getRoomUsers(user.room)
     });
+
+    getQuestion("Physics")
   });
 
   // Listen for chatMessage
@@ -114,7 +120,7 @@ io.on('connection', socket => {
         users: getRoomUsers(user.room)
       });
 
-      if(getRoomUsers(user.room).length < 1) {
+      if (getRoomUsers(user.room).length < 1) {
         if (privateRooms.includes(room)) {
           privateRooms = privateRooms.filter(privateRoom => privateRoom != room)
         } else {
@@ -127,17 +133,16 @@ io.on('connection', socket => {
 
 function generateRoomCode(length) {
   do {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
+    for (var i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
   } while (privateRooms.includes(result) || publicRooms.includes(result));
-  
+
   return result;
 }
-
 
 const PORT = process.env.PORT || 3000;
 
