@@ -6,9 +6,12 @@ function formatHTML(html) {
     html = html.replace(/\r?\n|\r/g, '');
     html = html.replace(/[\(\)']+/g, '');
     html = html.replace(/ *\[[^\]]*]/g, '');
-    html = html.replace(/:/g, '');
-    html = html.replace(/-/g, ' ');
-    html = html.replace(/\//g, '');
+    html = html.replace(/{(.*)}/g, '');
+    html = html.replace(/==(.*)==/g, '');
+
+    //html = html.replace(/:/g, '');
+    //html = html.replace(/-/g, ' ');
+    //html = html.replace(/\//g, '');
     return html;
 }
 
@@ -163,29 +166,14 @@ function TFIDF(documents) {
         }
     }
 
-
     let max = 0.0;
-    let max2 = 0.0;
-    let max3 = 0.0;
-
     let max_sentence = "";
-    let max2Sent = "";
-    let max3Sent = "";
 
-
-    // finds the top 3 sentences in TFidfDict
+    // finds the top sentence in TFidfDict
     for (const [key, value] of Object.entries(TFidfDict)) {
-        if (TFidfDict[key] > max) {
+        if (TFidfDict[key] > max && /\d/.test(key)) {
             max = TFidfDict[key];
             max_sentence = key;
-        }
-        else if (TFidfDict[key] > max2 && TFidfDict[key] < max) {
-            max2 = TFidfDict[key];
-            max2Sent = key;
-        }
-        else if (TFidfDict[key] > max3 && TFidfDict[key] < max2 && TFidfDict[key] < max) {
-            max3 = TFidfDict[key];
-            max3Sent = key;
         }
     }
     return (max_sentence);
@@ -213,20 +201,30 @@ function getQuestion(input) {
           .then(articleResponse => {
             var article = articleResponse.data.query.categorymembers[Math.floor(Math.random() * articleResponse.data.query.categorymembers.length)].title;
   
-            axios.get('https://en.wikipedia.org/w/api.php?action=parse&page=' + article + '&prop=text&formatversion=2&format=json')
+            // 'https://en.wikipedia.org/w/api.php?action=parse&page=' + article + '&prop=text&formatversion=2&format=json'
+
+            axios.get('https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=10&exlimit=1&titles=' + article.split(' ').join('_') + '&explaintext=1&formatversion=2&format=json')
               .then(HTMLResponse => {
+                console.log(article.split(' ').join('_'))
+                var html = formatHTML(HTMLResponse.data.query.pages[0].extract)
+                //console.log(html)
+                
+                /*
                 var html = HTMLResponse.data.parse.text;
                 var dom = new JSDOM(html);
                 let pElements = dom.window.document.getElementsByTagName("p")
                 let arr = []
                 for (var i = 0; i < pElements.length; i++) {
-                  arr.push(pElements[i].textContent)
+                    if (!pElements[i].textContent.includes("{") && !pElements[i].textContent.includes("}")){
+                        arr.push(pElements[i].textContent)
+                    }
                 }
                 html = formatHTML(arr.join(" "))
+                //console.log(html)
+                */
                 var tfidf = TFIDF(html)
-                console.log(article)
-                console.log(html)
                 console.log(tfidf)
+                
               })
               .catch(HTMLError => {
                 console.log(HTMLError)

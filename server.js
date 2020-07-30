@@ -94,7 +94,6 @@ io.on('connection', socket => {
       users: getRoomUsers(user.room)
     });
 
-    getQuestion("Physics")
   });
 
   // Listen for chatMessage
@@ -102,6 +101,7 @@ io.on('connection', socket => {
     const user = getCurrentUser(socket.id);
 
     io.to(user.room).emit('message', formatMessage(user.username, msg));
+    getQuestion("Naruto")
   });
 
   // Runs when client disconnects
