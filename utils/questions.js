@@ -6,9 +6,13 @@ function formatHTML(html) {
     html = html.replace(/\r?\n|\r/g, '');
     html = html.replace(/[\(\)']+/g, '');
     html = html.replace(/ *\[[^\]]*]/g, '');
-    html = html.replace(/:/g, '');
-    html = html.replace(/-/g, ' ');
-    html = html.replace(/\//g, '');
+    html = html.replace(/{(.*)}/g, '');
+    html = html.replace(/==(.*)==/g, '');
+    //html = html.replace(/[^a-zA-Z\d\s:]/g, '') //all non-alphanumeric
+
+    //html = html.replace(/:/g, '');
+    //html = html.replace(/-/g, ' ');
+    //html = html.replace(/\//g, '');
     return html;
 }
 
@@ -50,6 +54,12 @@ function termFrequency(document) {
 
     // gets rid of trailing spaces
     const sentences = document.split(".").map(item => item.trim());
+    /*
+    var result = document.replace(/\b(\w\.\w\.)|([.?!])\s+(?=[A-Za-z])/g, function (m, g1, g2) {
+        return g1 ? g1 : g2 + "\r";
+    });
+    var sentences = result.split("\r");
+    */
     sentences[0] = sentences[0].substring(146);
 
     const TFVals = countWords(words_without_stopwords)
@@ -59,6 +69,7 @@ function termFrequency(document) {
     for (const [key, value] of Object.entries(TFVals)) {
         TFVals[key] = TFVals[key] / words_without_stopwords.length;
     }
+    //console.log(TFVals);
 
     // splits it up into sentences now
     var TFSentences = {};
@@ -94,6 +105,12 @@ function inverseDocumentFrequency(document) {
     const unique_words_set = uniqueWords(words_without_stopwords);
 
     const sentences = document.split(".").map(item => item.trim());
+    /*
+    var result = document.replace(/\b(\w\.\w\.)|([.?!])\s+(?=[A-Za-z])/g, function (m, g1, g2) {
+        return g1 ? g1 : g2 + "\r";
+    });
+    var sentences = result.split("\r");
+    */
     sentences[0] = sentences[0].substring(146);
 
     const lengthOfDocuments = sentences.length;
@@ -163,83 +180,102 @@ function TFIDF(documents) {
         }
     }
 
-
     let max = 0.0;
-    let max2 = 0.0;
-    let max3 = 0.0;
-
     let max_sentence = "";
-    let max2Sent = "";
-    let max3Sent = "";
 
-
-    // finds the top 3 sentences in TFidfDict
+    // finds the top sentence in TFidfDict
     for (const [key, value] of Object.entries(TFidfDict)) {
-        if (TFidfDict[key] > max) {
+        if (TFidfDict[key] > max && /\d/.test(key)) {
             max = TFidfDict[key];
             max_sentence = key;
-        }
-        else if (TFidfDict[key] > max2 && TFidfDict[key] < max) {
-            max2 = TFidfDict[key];
-            max2Sent = key;
-        }
-        else if (TFidfDict[key] > max3 && TFidfDict[key] < max2 && TFidfDict[key] < max) {
-            max3 = TFidfDict[key];
-            max3Sent = key;
         }
     }
     return (max_sentence);
 }
 
+function formatQuestion(input) {
+    var answer = input.match(/[0-9]+(?!.*[0-9])/)
+    //console.log(answer)
+    var question = input.replace(/[0-9]+(?!.*[0-9])/, '___')
+    //console.log(question)
+    return { q: question, a: answer }
+}
+
 function getQuestion(input) {
     var category = "Category:" + input.split(' ').join('%20');
-    var depth = Math.floor(Math.random() * 10) + 1;
-    axios.get('https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=' + category + '&cmtype=subcat&format=json')
-      .then(categoryResponse => {
-  
-        while (depth > 0 && categoryResponse.data.query.categorymembers.length > 0) {
-          category = categoryResponse.data.query.categorymembers[Math.floor(Math.random() * categoryResponse.data.query.categorymembers.length)].title.split(' ').join('%20');
-          depth -= 1;
-          axios.get('https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=' + category + '&cmtype=subcat&format=json')
-            .then(subcategoryResponse => {
-              categoryResponse = subcategoryResponse;
-            })
-            .catch(subcategoryError => {
-              console.log(subcategoryError)
-            })
-        }
-  
-        axios.get('https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=' + category + '&cmlimit=500&format=json')
-          .then(articleResponse => {
-            var article = articleResponse.data.query.categorymembers[Math.floor(Math.random() * articleResponse.data.query.categorymembers.length)].title;
-  
-            axios.get('https://en.wikipedia.org/w/api.php?action=parse&page=' + article + '&prop=text&formatversion=2&format=json')
-              .then(HTMLResponse => {
-                var html = HTMLResponse.data.parse.text;
-                var dom = new JSDOM(html);
-                let pElements = dom.window.document.getElementsByTagName("p")
-                let arr = []
-                for (var i = 0; i < pElements.length; i++) {
-                  arr.push(pElements[i].textContent)
+    axios.get('https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=' + category + '&cmlimit=500&format=json')
+        .then(articleResponse => {
+            var articles = articleResponse.data.query.categorymembers;
+            if (articles.length == 0) {
+                return -1
+            }
+
+            //timeout here
+            /*var totalarticles = articles.filter(moreCats => !moreCats.title.includes("Category:"))
+            var categories = articles.filter(moreCats => moreCats.title.includes("Category:"))
+
+            categories.forEach(cat_to_expand => {
+                axios.get('https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=' + cat_to_expand.title + '&cmlimit=500&format=json')
+                    .then(the_response => {
+                        var response_cats = the_response.data.query.categorymembers;
+                        response_cats.forEach(check => {
+                            if (!check.title.includes("Category:")) {
+                                totalarticles.push(check)
+                                console.log(check)
+                            }
+                        })
+                    })
+                    .catch(HTMLError => {
+                        console.log(HTMLError)
+                    })
+            })*/
+
+            var validArticles = []
+            articles.forEach(element => {
+                if (element.title.includes("Category:")) {
+                    //do something
                 }
-                html = formatHTML(arr.join(" "))
-                var tfidf = TFIDF(html)
-                console.log(article)
-                console.log(html)
-                console.log(tfidf)
-              })
-              .catch(HTMLError => {
-                console.log(HTMLError)
-              })
-          })
-          .catch(articleError => {
+                else {
+                    var articleTitle = element.title.split(' ').join('_')
+                    axios.get('https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=10&exlimit=1&titles=' + articleTitle + '&explaintext=1&formatversion=2&format=json')
+                        .then(HTMLResponse => {
+                            var html = formatHTML(HTMLResponse.data.query.pages[0].extract)
+                            if (/\d/.test(html)) {
+                                //totalarticles.push(articleTitle)
+                                validArticles.push(articleTitle)
+                            }
+                        })
+                        .catch(HTMLError => {
+                            console.log(HTMLError)
+                        })
+                }
+            })
+
+            setTimeout(function () {
+                if (validArticles.length == 0) { //changed to totalarticles from validArticles
+                    return -2
+                }
+
+                //var selectedTitle = totalarticles[Math.floor(Math.random() * totalarticles.length)];
+                var selectedTitle = validArticles[Math.floor(Math.random() * validArticles.length)];
+                axios.get('https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=10&exlimit=1&titles=' + selectedTitle + '&explaintext=1&formatversion=2&format=json')
+                    .then(HTMLResponse => {
+                        var html = formatHTML(HTMLResponse.data.query.pages[0].extract)
+                        var sentence = TFIDF(html)
+                        var qanda = formatQuestion(sentence)
+
+                        console.log(selectedTitle + ": " + qanda.q + " (" + qanda.a + ")")
+                        return sentence
+                    })
+                    .catch(HTMLError => {
+                        console.log(HTMLError)
+                    })
+            }, 1000)
+        })
+        .catch(articleError => {
             console.log(articleError)
-          })
-      })
-      .catch(categoryError => {
-        console.log(categoryError)
-      })
-  }
+        })
+}
 
 module.exports = {
     formatHTML,
